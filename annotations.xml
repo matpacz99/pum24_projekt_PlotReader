@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <job>
+      <id>1933738</id>
+      <size>8</size>
+      <mode>annotation</mode>
+      <overlap>0</overlap>
+      <bugtracker></bugtracker>
+      <created>2025-01-11 23:40:15.584971+00:00</created>
+      <updated>2025-01-12 09:26:10.387388+00:00</updated>
+      <subset>default</subset>
+      <start_frame>0</start_frame>
+      <stop_frame>7</stop_frame>
+      <frame_filter></frame_filter>
+      <segments>
+        <segment>
+          <id>1936208</id>
+          <start>0</start>
+          <stop>7</stop>
+          <url>https://app.cvat.ai/api/jobs/1933738</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>matpacz99</username>
+        <email>mateusz.paczek@student.uj.edu.pl</email>
+      </owner>
+      <assignee></assignee>
+      <labels>
+        <label>
+          <name>vertical_line</name>
+          <color>#3f9e03</color>
+          <type>any</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>horizontal_line</name>
+          <color>#eefe1b</color>
+          <type>any</type>
+          <attributes>
+          </attributes>
+        </label>
+      </labels>
+    </job>
+    <dumped>2025-01-12 09:26:14.246142+00:00</dumped>
+  </meta>
+  <image id="0" name="graph22.jpg" width="6432" height="4923">
+    <polygon label="horizontal_line" source="manual" occluded="0" points="1002.70,3959.50;5707.42,3997.17;5745.10,4230.50;1017.70,4170.30" z_order="0">
+    </polygon>
+    <polygon label="vertical_line" source="manual" occluded="0" points="1221.00,4200.40;1236.10,474.30;1025.30,496.90;1040.30,4185.40" z_order="0">
+    </polygon>
+  </image>
+  <image id="1" name="graph35.jpg" width="3216" height="2462">
+    <polygon label="horizontal_line" source="manual" occluded="0" points="523.80,2012.30;2816.40,2008.50;2812.60,2098.90;523.80,2098.80" z_order="0">
+    </polygon>
+    <polygon label="vertical_line" source="manual" occluded="0" points="610.30,2106.40;610.40,212.80;523.80,220.30;523.80,2110.20" z_order="0">
+    </polygon>
+  </image>
+  <image id="2" name="graph39.jpg" width="3216" height="2462">
+    <polygon label="horizontal_line" source="manual" occluded="0" points="523.80,2012.30;2835.20,1997.20;2838.90,2102.60;520.00,2102.60" z_order="0">
+    </polygon>
+    <polygon label="vertical_line" source="manual" occluded="0" points="614.10,2091.30;617.90,239.20;520.00,246.70;516.30,2095.00" z_order="0">
+    </polygon>
+  </image>
+  <image id="3" name="graph40.jpg" width="3216" height="2462">
+    <polygon label="horizontal_line" source="manual" occluded="0" points="535.06,2038.61;2831.42,2034.84;2820.10,2095.10;523.80,2095.20" z_order="0">
+    </polygon>
+    <polygon label="vertical_line" source="manual" occluded="0" points="621.60,2095.10;610.30,212.80;523.80,220.30;542.60,2098.80" z_order="0">
+    </polygon>
+  </image>
+  <image id="4" name="graph46.jpg" width="3216" height="2462">
+    <polygon label="horizontal_line" source="manual" occluded="0" points="527.53,2027.31;2801.30,2034.84;2797.50,2098.90;546.30,2102.60" z_order="0">
+    </polygon>
+    <polygon label="vertical_line" source="manual" occluded="0" points="587.76,2087.55;587.76,254.22;531.30,227.90;531.30,2102.60" z_order="0">
+    </polygon>
+  </image>
+  <image id="5" name="graph48.jpg" width="3216" height="2462">
+    <polygon label="vertical_line" source="manual" occluded="0" points="595.29,2102.61;602.82,220.34;527.50,235.40;535.00,2076.20" z_order="0">
+    </polygon>
+    <polygon label="horizontal_line" source="manual" occluded="0" points="538.82,2031.08;2797.54,2034.84;2805.10,2102.60;535.10,2091.30" z_order="0">
+    </polygon>
+  </image>
+  <image id="6" name="graph58.jpg" width="3216" height="2462">
+    <polygon label="horizontal_line" source="manual" occluded="0" points="527.53,2031.08;2831.42,2031.08;2801.30,2095.10;531.30,2087.50" z_order="0">
+    </polygon>
+    <polygon label="vertical_line" source="manual" occluded="0" points="587.76,2087.55;595.29,231.64;531.30,224.10;527.60,2080.00" z_order="0">
+    </polygon>
+  </image>
+  <image id="7" name="graph63.jpg" width="3216" height="2462">
+    <polygon label="vertical_line" source="manual" occluded="0" points="584.00,2095.08;591.52,227.87;384.50,246.70;395.80,2098.80" z_order="0">
+    </polygon>
+    <polygon label="horizontal_line" source="manual" occluded="0" points="527.53,2027.31;2854.00,2031.08;2861.50,2189.20;493.60,2189.10" z_order="0">
+    </polygon>
+  </image>
+</annotations>
