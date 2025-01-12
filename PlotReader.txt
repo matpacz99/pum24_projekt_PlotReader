@@ -1,0 +1,180 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r'ścieżka do tesseract.exe '
+
+#Wczytanie zdjęcia wykresu
+image = cv2.imread("<nazwa_wykresu.png>")
+
+#Zamiana barw zdjęcia na odcienie szarości
+gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+
+###Algorytm Hougha wykrywania linii - uzyskiwanie współrzędnych osi
+
+#Wykrycie krawędzi algorytmem Canny
+edges = cv2.Canny(gray,50,150,apertureSize = 3)
+
+#Wykrycie linii prostych z użyciem transformacji liniowej Hougha
+lines = cv2.HoughLinesP(edges, rho=1, theta=np.pi / 180, threshold=100, minLineLength=100, maxLineGap=10)
+
+
+# Filtracja linii dla osi X i Y
+horizontal_lines = []
+vertical_lines = []
+
+for line in lines:
+    x1, y1, x2, y2 = line[0]
+    if abs(y2 - y1) < 10:  # Bliska poziomej
+        horizontal_lines.append((x1, y1, x2, y2))
+    elif abs(x2 - x1) < 10:  # Bliska pionowej
+        vertical_lines.append((x1, y1, x2, y2))
+
+# Znalezienie najdłuższej linii jako osi
+if horizontal_lines:
+    x_axis = max(horizontal_lines, key=lambda l: abs(l[2] - l[0]))
+if vertical_lines:
+    y_axis = max(vertical_lines, key=lambda l: abs(l[3] - l[1]))
+
+#Wyrysowanie znalezionych osi na wyjściowym zdjęciu
+if x_axis:
+    cv2.line(image, (x_axis[0], x_axis[1]), (x_axis[2], x_axis[3]), (255, 0, 0), 2)  # Oś X
+if y_axis:
+    cv2.line(image, (y_axis[0], y_axis[1]), (y_axis[2], y_axis[3]), (0, 0, 255), 2)  # Oś Y
+
+#Zapisanie zdjęcia z oznaczonymi osiami
+cv2.imwrite("Axes Detected.png", image)
+
+#Wykrywanie wartości na osiach X i Y
+numbers = pytesseract.image_to_string(gray, config='--psm 6 outputbase digits')
+
+#Rozdział wyjściowego stringu na str osi X i Y
+lines_num = numbers.split('\n')
+y_line = [float(line) for line in lines_num[:-2]]
+x_line = list(map(float,lines_num[-2].split()))
+
+
+#Zamiana str na numpy array, dodatkowe uwzględnienie zera
+
+y_axis_val = np.array(y_line)
+y_axis_val = np.sort(np.append(y_axis_val,0))
+
+x_axis_val = np.array(x_line)
+x_axis_val = np.sort(np.append(x_axis_val,0))
+
+
+
+#Rozdział na wartości osi X i Y:
+
+
+min_x, max_x = min(x_axis_val) ,max(x_axis_val)
+min_y, max_y = min(x_axis_val) , max(y_axis_val)
+
+
+# Współrzędne osi (w pikselach)
+
+x1, y1 = x_axis[0], x_axis[1]  # Początek osi X
+x2, y2 = x_axis[2], x_axis[3]  # Koniec osi X
+x3, y3 = y_axis[0], y_axis[1]  # Początek osi Y
+x4, y4 = y_axis[2], y_axis[3]  # Koniec osi Y
+
+
+# Obliczenie długości osi w pikselach
+len_x = x2 - x1
+len_y = y3 - y4
+
+# Obliczenie skali
+scale_x = (max_x - min_x) / len_x
+scale_y = (max_y - min_y) / len_y
+
+shape = image.shape[:2][::-1]
+print(shape)
+
+mask = np.zeros(shape[::-1], dtype=np.uint8)
+
+
+
+# Rysowanie prostokątów dla osi na masce
+cv2.rectangle(mask, (x1,y1-10),
+              shape, 255, -1)
+
+cv2.rectangle(mask, (0,0),(x3+10, y3),
+               255, -1)
+
+# Zamaskowanie osi (ustawienie pikseli osi na kolor tła)
+masked_image = cv2.bitwise_and(image, image, mask=cv2.bitwise_not(mask))
+
+# Opcjonalne wypełnienie zamaskowanych obszarów kolorem tła
+# Zakładam, że tło jest białe
+background_color = (255, 255, 255)  # Białe tło
+masked_image[mask == 255] = background_color
+
+
+
+###Wykrywanie linii wykresu
+
+masked_image_gray = cv2.cvtColor(masked_image, cv2.COLOR_BGR2GRAY)
+masked_image_gray = cv2.cvtColor(masked_image, cv2.COLOR_BGR2HSV)
+
+
+# Tworzenie maski, by wykryta została tylko linia wykresu
+mask = cv2.inRange(masked_image_gray, (0,0,0), (125,125,125))
+segmented_line = cv2.bitwise_and(masked_image_gray, masked_image, mask=mask)
+
+
+
+contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+cv2.drawContours(masked_image, contours, -1, (0,255,0), 3)
+
+pixels = []
+for contour in contours:
+    for point in contour:
+        pixels.append((point[0][0], point[0][1]))
+
+
+
+# Tworzenie funkcji mapującej piksele linii wykresu na współrzędne wykresu
+
+class pixeltocoord():
+    def __init__(self,data):
+        self.x_points = []
+        self.y_points = []
+        self.data = data
+
+
+    def func(self):
+        for pixel in self.data:
+            self.x_points.append((pixel[0]-x1)*scale_x)
+            self.y_points.append((y3-pixel[1])*scale_y)
+        return self.x_points,self.y_points
+
+Pts = pixeltocoord(pixels)
+Pts.func()
+
+plt.scatter(Pts.x_points,Pts.y_points)
+plt.ylim(0,4)
+plt.xlim(0,12)
+
+
+plt.savefig('<nazwa_wykresu_wyjściowego.png>',dpi=500)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
